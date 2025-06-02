@@ -1,0 +1,38 @@
+document.getElementById("resumeForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const file = document.getElementById("resumeFile").files[0];
+  const jobDesc = document.getElementById("jobDescription").value;
+
+  if (!file || !jobDesc) {
+    alert("Please upload a resume and enter a job description.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async function () {
+    const typedarray = new Uint8Array(reader.result);
+    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+
+    let resumeText = "";
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      resumeText += content.items.map(item => item.str).join(" ") + " ";
+    }
+
+    const response = await fetch("https://fmz11evofk.execute-api.us-east-1.amazonaws.com/analyze-nlp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        resumeText: resumeText.slice(0, 5000),
+        jobDescription: jobDesc
+      }),
+    });
+
+    const result = await response.json();
+    document.getElementById("result").innerText = JSON.stringify(result, null, 2);
+  };
+
+  reader.readAsArrayBuffer(file);
+});

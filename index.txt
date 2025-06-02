@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume Analyzer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>AI Resume Analyzer</h1>
+    <form id="resumeForm">
+      <label for="resumeFile">Upload Resume (PDF only):</label>
+      <input type="file" id="resumeFile" accept=".pdf" required />
+
+      <label for="jobDescription">Paste Job Description:</label>
+      <textarea id="jobDescription" rows="6" required></textarea>
+
+      <button type="submit">Analyze</button>
+    </form>
+
+    <pre id="result"></pre>
+  </div>
+
+  <!-- pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
